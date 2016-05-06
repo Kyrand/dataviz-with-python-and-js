@@ -60,3 +60,7 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+
+# nobel_viz specific
+nobel_viz/.old
+/nobel_viz/.#index.html
