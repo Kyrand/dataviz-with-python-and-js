@@ -3,18 +3,17 @@
 (function(nbviz) {
     'use strict';
 
-    // var winners_args = {
-    //   "projection":JSON.stringify( {"mini_bio":0, "bio_image":0} )
-    // };
     var query_winners = 'winners?projection=' +
         JSON.stringify( {"mini_bio":0, "bio_image":0} );
     
+    // Load the initial data required by the Nobel-viz
     var q = queue()
         .defer(d3.json, "static/data/world-110m.json")
         .defer(d3.csv, "static/data/world-country-names-nobel.csv")
-        // .defer(d3.json, "data/nobel_winners_cleaned.json")
         .defer(d3.json, "static/data/winning_country_data.json");
-        // .defer(d3.json, "static/data/nobel_winners_biopic.json")
+    
+    // The $STATIC_API flag dictates whether we are using static
+    // files or using the MongoDB based EVE-API
     if(window.$STATIC_API){
         q.defer(nbviz.getDataFromAPI, '_winners');
     }

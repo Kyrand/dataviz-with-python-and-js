@@ -2,7 +2,47 @@
 (function(nbviz) {
     'use strict';
 
-    // var infoboxAttrs = ['category', 'year', 'country']; 
+    
+    nbviz.updateList = function(data) {
+        var rows, cells;
+        // Sort the winners' data by year
+        var data = data.sort(function(a, b) {
+            return +b.year - +a.year;
+        });
+        // Bind our winners' data to the table rows 
+        rows = d3.select('#nobel-list tbody')
+            .selectAll('tr')
+            .data(data);
+
+        rows.enter().append('tr')
+            .on('click', function(d) {
+                console.log('You clicked a row ' + JSON.stringify(d));
+                nbviz.displayWinner(d);
+            });
+        // Fade out excess rows over 2 seconds
+        rows.exit()
+            .transition().duration(nbviz.TRANS_DURATION)
+            .style('opacity', 0)
+            .remove();
+
+        cells = rows.selectAll('td')
+            .data(function(d) {
+                return [d.year, d.category, d.name];  
+            });
+        // Append data cells, then set their text  
+        cells.enter().append('td');
+        
+        cells.text(function(d) {
+                return d;
+            });
+
+        // Display a random winner if data is available
+        if(data.length){
+            nbviz.displayWinner(data[Math.floor(Math.random() * data.length)]);
+        }
+        
+    };
+
     
     nbviz.displayWinner = function(_wData) {
 
@@ -22,7 +62,6 @@
             nw.select('#biobox').html(wData.mini_bio);
             // Add an image if available, otherwise remove the old one
             if(wData.bio_image){
-                // nw.select('#picbox').html('<img src="static/images/winners/' + wData.bio_image + '"/>');
                 nw.select('#picbox img')
                     .attr('src', 'static/images/winners/' + wData.bio_image)
                     .style('display', 'inline');
@@ -36,42 +75,4 @@
         });
     };
     
-    nbviz.updateList = function(data) {
-        var rows, cells;
-        var data = data.sort(function(a, b) {
-            return +b.year - +a.year;
-        });
-        
-        rows = d3.select('#nobel-list tbody')
-            .selectAll('tr')
-            .data(data);
-
-        rows.enter().append('tr')
-            .on('click', function(d) {
-                console.log('You clicked a row ' + JSON.stringify(d));
-                nbviz.displayWinner(d);
-            });
-
-        rows.exit()
-            .transition().duration(nbviz.TRANS_DURATION)
-            .style('opacity', 0)
-            .remove();
-
-        cells = rows.selectAll('td')
-            .data(function(d) {
-                return [d.year, d.category, d.name];  
-            });
-        
-        cells.enter().append('td');
-        
-        cells.html(function(d) {
-                return d;
-            });
-
-        // display random winner
-        if(data.length){
-            nbviz.displayWinner(data[Math.floor(Math.random() * data.length)]);
-        }
-        
-    };
 }(window.nbviz = window.nbviz || {}));

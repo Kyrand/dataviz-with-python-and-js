@@ -8,7 +8,7 @@
     <!-- A HEADER WITH TITLE AND SOME EXPLANATORY INFO -->
     <div id='title'>Visualising the Nobel Prize</div> 
     <div id="info"> 
-      This is a companion piece to the book <a href='http://'>Data Visualisation with Python and JavaScript</a>, in which its construction is detailed. The data used was scraped Wikipedia using the <a href='https://en.wikipedia.org/wiki/List_of_Nobel_laureates_by_country'>list of winners by country</a> as a starting point. The accompanying Github repo is <a href='http://github.com/Kyrand/dataviz-with-python-and-js'>here</a>. 
+      This is a companion piece to the book <a href='http://'>Data Visualisation with Python and JavaScript</a>, in which its construction is detailed. The data used was scraped from Wikipedia using the <a href='https://en.wikipedia.org/wiki/List_of_Nobel_laureates_by_country'>list of winners by country</a> as a starting point. The accompanying Github repo is <a href='http://github.com/Kyrand/dataviz-with-python-and-js'>here</a>. 
     </div> 
     <!-- 2. THE PLACEHOLDERS FOR OUR VISUAL COMPONENTS  -->
     <div id="nbviz">
@@ -22,8 +22,8 @@
           Gender
           <select>
             <option value="All">All</option>
-            <option value="female">female</option>
-            <option value="male">male</option>
+            <option value="female">Female</option>
+            <option value="male">Male</option>
           </select>
         </div>
         <div id="country-select">
@@ -97,8 +97,8 @@
 
   <script>
     window.$STATIC_API = true;
+    <!-- This sets the relative address of the static data API  -->
     $EVE_API = 'static/data/api/';
-    <!-- $EVE_API = {{ config.EVE_API|tojson|safe }}; -->
   </script>
 
   <script src="static/js/nbviz_core.js" ></script>

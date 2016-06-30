@@ -24,7 +24,8 @@
     };
 
         
-    // var API_URL = 'http://localhost:5000/api/';
+    // $EVE_API (by default 'http://localhost:5000/api/') is set in
+    // index.html (STATIC FILES) and templates/index.html (MONGODB EVE API);
     nbviz.getDataFromAPI = function(resource, callback){
         d3.json($EVE_API + resource, function(error, data) {
             

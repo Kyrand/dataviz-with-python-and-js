@@ -23,9 +23,8 @@
     d3.select('#gender-select select')
         .on('change', function(d) {
             var gender = d3.select(this).property('value');
-            // nbviz.filterByCategory(val);
             if(gender === 'All'){
-                // reset filter 
+                // Reset the filter to all genders
                 nbviz.genderDim.filter();
             }
             else{

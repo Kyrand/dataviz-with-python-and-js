@@ -5,18 +5,20 @@
     var defaultMapWidth = 960,
         defaultMapHeight = 480;
 
-    var mapBlock = d3.select('#nobel-map'),
-        width = parseInt(mapBlock.style('width')),
-        height = parseInt(mapBlock.style('height'));
-
-    var svg = mapBlock
-            .append('svg');
-
+    // DIMENSIONS AND SVG
+    var mapContainer = d3.select('#nobel-map');
+    var boundingRect = mapContainer.node().getBoundingClientRect();
+    var width = boundingRect.width,
+        height = boundingRect.height;
+    
+    var svg = mapContainer.append('svg');
+    
     var MANUAL_CENTROIDS = {
         France: [2, 46],
         'United States': [-98,35, 39.5]
     };
 
+    // A FEW D3 PROJECTIONS
     // default scale = 153
     var projection_eq = d3.geo.equirectangular()
         .scale(193 * (height/480))
@@ -41,12 +43,14 @@
         .scale((width + 1) / 2 / Math.PI)
         .translate([width / 2, height / 2])
         .precision(.1);
-    
+    // END PROJECTIONS
+    // We use the equirectangular projection for the Nobel-viz 
     var projection = projection_eq;
 
     var path = d3.geo.path()
             .projection(projection);
 
+    // ADD GRATICULE (MAP GRID)
     var graticule = d3.geo.graticule()
         .step([20, 20]);
 
@@ -58,22 +62,15 @@
     var getCentroid = function(mapData) {
         var latlng = nbviz.data.countryData[mapData.name].latlng;
         return projection([latlng[1], latlng[0]]);
-        // if(coords = MANUAL_CENTROIDS[mapData.name]){
-        //     return projection(coords);
-        // }
-
-        // return path.centroid(mapData.geo);
     };
         
-    // var radiusScale = d3.scale.linear()
     var radiusScale = d3.scale.sqrt()
-        // .domain([0, max_winners])
         .range([nbviz.MIN_CENTROID_RADIUS, nbviz.MAX_CENTROID_RADIUS]);
     
     var cnameToCountry = {};
+    // called when the Noble-viz is initialised with the Nobel dataset
     nbviz.initMap = function(world, names) { 
-        // filters
-        // topo features
+        // geojson objects extracted from topojson features
         var land = topojson.feature(world, world.objects.land),
             countries = topojson.feature(world, world.objects.countries).features,
             borders = topojson.mesh(world, world.objects.countries, function(a, b) { return a !== b; });
@@ -87,12 +84,6 @@
         names.forEach(function(n) {
             cnameToCountry[n.name] = idToCountry[n.id];
         });
-        
-        // normalizing
-        
-        // var radius_scale = d3.scale.linear()
-        //     .domain([0, max_winners])
-        //     .range([MIN_CENTROID_RADIUS, MAX_CENTROID_RADIUS]);
         
         // MAIN WORLD MAP
         svg.insert("path", ".graticule")
@@ -117,20 +108,7 @@
             .attr("class", "boundary")
             .attr("d", path);
 
-        // nbviz.updateMap(countryData);
     };
-
-    // var tooltip = new kcharts.Tooltip();
-    // tooltip.id('#song-tooltip').colored(true);
-    // tooltip.dataFormat = function(d) {
-    //     var comp = d.data.metadata.COM.split(',');
-    //     return {
-    //         'composer':comp[1] + ' ' + comp[0],
-    //         'title':d.data.metadata.OTL,
-    //         'date':d.data.metadata.ODT,
-    //         'key':d.data.key
-    //     };
-    // };
         
     var tooltip = d3.select('#map-tooltip');
     nbviz.updateMap = function(countryData) {
@@ -147,7 +125,6 @@
                 };
             });
 
-        // var maxWinners = _.max(_.pluck(mapData, 'number'));
         var maxWinners = d3.max(mapData.map(function(d) {
             return d.number;
         }));
@@ -165,9 +142,6 @@
             .on('mouseenter', function(d) {
                 // console.log('Entered ' + d.name);
                 var country = d3.select(this);
-                // if(parseFloat(country.style('opacity')) < 0.1){
-                //     return;
-                // }
                 if(!country.classed('visible')){ return; }
                 
                 var mouseCoords = d3.mouse(this);
@@ -186,27 +160,12 @@
                 
                 d3.select(this).classed('active', true);
                 
-                // d3.selectAll('#nobel-time circle.' + countryClass)
-                //     .style('stroke-width', '2px');
             })
             .on('mouseout', function(d) {
                 // console.log('Left ' + d.name);
-                // tooltip.style('display', 'none');
                 tooltip.style('left', '-9999px');
                 d3.select(this).classed('active', false);
             })
-            // .on('mousemove', function(d) {
-            //     var country = d3.select(this);
-            //     var tooltip = d3.select('#map-tooltip');
-                
-            //     var bbox = country.node().getBBox();
-            //     // var mp = d3.mouse(this);
-               
-            //     // tooltip.style('top', mp[1] + 'px');
-            //     // tooltip.style('left', mp[0] + 'px');
-            //     // tooltip.style('top', getCentroid(d)[1] + 'px');
-            //     // tooltip.style('left', getCentroid(d)[0] + 'px');
-            // })
         ;
 
         countries
@@ -240,7 +199,6 @@
                 return getCentroid(d)[0];
             })
             .attr("cy", function(d) {
-                // return path.centroid(d.geo)[1];
                 return getCentroid(d)[1];
             })
             .classed('active', function(d) {
@@ -256,7 +214,5 @@
             .style('opacity', 0);
         
     };
-
-    // d3.select(self.frameElement).style("height", height + "px");
 
 }(window.nbviz = window.nbviz || {}));
