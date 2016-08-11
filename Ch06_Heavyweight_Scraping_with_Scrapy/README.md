@@ -68,6 +68,7 @@ The URLs to Wikidata now include the hypertext transfer header 'https:' so the `
  if href:
 -    request = scrapy.Request('https:' + href[0],
 +    request = scrapy.Request(href[0],
+```
 
 
 ## Errata!
