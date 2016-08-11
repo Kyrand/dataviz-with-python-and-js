@@ -8,7 +8,7 @@ WINNERS = 'winners'
 winners = json.load(open('data/nobel_winners_biopic.json'))
 mc = MongoClient(MONGO_URI)
 db = mc.get_default_database()
-    
+
 db[WINNERS].drop()
 db[WINNERS].insert(winners)
 
