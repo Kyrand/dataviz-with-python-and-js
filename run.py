@@ -22,7 +22,7 @@ def seed_db():
     winners = json.load(open('data/nobel_winners_biopic.json'))
     nobel_db[WINNERS_TABLE].drop()
     nobel_db[WINNERS_TABLE].insert(winners)
-    
+
     print('Seeded the database with %d Nobel winners'%nobel_db[WINNERS_TABLE].count())
 
 @click.command()
