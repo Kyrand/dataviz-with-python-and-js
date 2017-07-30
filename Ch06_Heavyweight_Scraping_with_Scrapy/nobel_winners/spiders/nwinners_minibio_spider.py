@@ -22,7 +22,7 @@ class NWinnerSpiderBio(scrapy.Spider):
         "http://en.wikipedia.org/wiki/List_of_Nobel_laureates_by_country?dfdfd"
     ]
 
-    For Scrapy v 1.0+, custom_settings can override the item pipelines in settings
+    """ For Scrapy v 1.0+, custom_settings can override the item pipelines in settings """
     custom_settings = {
         'ITEM_PIPELINES': {'nobel_winners.pipelines.NobelImagesPipeline':1},
     }
