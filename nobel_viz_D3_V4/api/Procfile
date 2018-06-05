@@ -1,0 +1,2 @@
+web: python server_eve.py
+seed: python seed_database.py
